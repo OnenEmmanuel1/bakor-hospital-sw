@@ -7,7 +7,7 @@ const accounts=[['admin@bakorhospital.test','admin','System','Administrator'],['
 async function initializeDatabase(){
   const name=process.env.DB_NAME;
   if(!name||!/^[_a-zA-Z0-9]+$/.test(name))throw new Error('DB_NAME must contain only letters, numbers, or underscores.');
-  const bootstrap=await mysql.createConnection({host:process.env.DB_HOST,port:Number(process.env.DB_PORT||3306),user:process.env.DB_USER,password:process.env.DB_PASSWORD,charset:'utf8mb4'});
+  const bootstrap=await mysql.createConnection(require('../src/config/mysqlOptions')({database:false}));
   try{await bootstrap.query(`CREATE DATABASE IF NOT EXISTS \`${name}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);}finally{await bootstrap.end();}
   const schema=fs.readFileSync(path.join(__dirname,'schema.sql'),'utf8');
   for(const statement of schema.split(';').map(s=>s.trim()).filter(Boolean))await db.query(statement);

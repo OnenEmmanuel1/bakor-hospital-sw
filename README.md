@@ -41,8 +41,12 @@ In Vercel, open **Project → Settings → Environment Variables** and add these
 | `SESSION_SECRET` | A private random string of at least 32 characters |
 | `DATA_ENCRYPTION_KEY` | A private key of exactly 64 hexadecimal characters |
 | `NOTIFY_MODE` | `simulate` until SMTP and Twilio are intentionally configured |
+| `DB_SSL` | `required` when using Aiven MySQL |
+| `DB_SSL_CA_BASE64` | Base64-encoded Aiven project CA certificate |
 
 Generate the two secrets locally with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` (run it separately for each key). Never commit either value or your production `.env`. Set Vercel's Git Production Branch to `vercel` in **Project → Settings → Git**. Keep local development on `main`; merge reviewed deployment changes from `main` into `vercel` before deploying. Vercel creates Preview deployments for other branches according to the project's Git settings.
+
+For Aiven MySQL, download the service's CA certificate from its Overview page. Set `DB_SSL=required` locally and in Vercel. For local use, save the downloaded file in the project folder as `aiven-ca.pem` and set `DB_SSL_CA=./aiven-ca.pem`. For Vercel, encode the downloaded file in PowerShell with `$ca = [Convert]::ToBase64String([IO.File]::ReadAllBytes('C:\path\to\ca.pem'))` and paste `$ca` as `DB_SSL_CA_BASE64`. The application verifies the database certificate when this setting is enabled. Keep the CA value and all database credentials out of Git. [Aiven TLS certificate guidance](https://aiven.io/docs/platform/concepts/tls-ssl-certificates)
 
 After adding environment variables, deploy the `vercel` branch from Vercel's Deployments page or push it to the connected GitHub repository. Confirm `/api/health`, sign in with a seeded account, and try each role's main workflow against the hosted database. Seed only fictional/demo data in hosted environments. Configure backups and database network access with the provider. The local in-process scheduler in `src/jobs/scheduler.js` does not run on Vercel; reminder, no-show, and stock-alert jobs need a separately configured scheduled worker before those background tasks are relied on in production. Vercel Cron runs against Production deployments; its available schedule frequency depends on the Vercel plan.
 
