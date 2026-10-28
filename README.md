@@ -46,6 +46,8 @@ Generate the two secrets locally with `node -e "console.log(require('crypto').ra
 
 After adding environment variables, deploy the `vercel` branch from Vercel's Deployments page or push it to the connected GitHub repository. Confirm `/api/health`, sign in with a seeded account, and try each role's main workflow against the hosted database. Seed only fictional/demo data in hosted environments. Configure backups and database network access with the provider. The local in-process scheduler in `src/jobs/scheduler.js` does not run on Vercel; reminder, no-show, and stock-alert jobs need a separately configured scheduled worker before those background tasks are relied on in production. Vercel Cron runs against Production deployments; its available schedule frequency depends on the Vercel plan.
 
+If you need to publish the local branches to GitHub, run `git push -u origin main` and `git push -u origin vercel` from the project folder. Then connect or import that GitHub repository in Vercel and select `vercel` as its Production Branch.
+
 ## Create the MySQL database only
 
 These steps create the database and a dedicated app user in MySQL 8. They do not install MySQL or configure Vercel. Run them in MySQL Workbench's SQL editor or the MySQL command line as an administrator. Replace both example passwords with unique private values.
@@ -60,7 +62,7 @@ FLUSH PRIVILEGES;
 Then apply the schema to that database. From PowerShell in the project folder, if the MySQL client is installed:
 
 ```powershell
-mysql -h YOUR_DB_HOST -P 3306 -u bkh -p bakor_hospital < db/schema.sql
+Get-Content db/schema.sql -Raw | mysql -h YOUR_DB_HOST -P 3306 -u bkh -p bakor_hospital
 ```
 
 Enter the `bkh` password when prompted. The schema command creates the application's tables; then configure matching `DB_*` variables in `.env` for local use or in Vercel for deployment. To load demo logins and sample records, separately run `npm run seed` in an environment with those variables configured. Do not use seeded demo credentials for real accounts.
