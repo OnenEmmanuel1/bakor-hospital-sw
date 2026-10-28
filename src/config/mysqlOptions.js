@@ -13,7 +13,8 @@ function mysqlOptions({database=true}={}){
     password:process.env.DB_PASSWORD,
     ...(database?{database:process.env.DB_NAME}:{}),
     waitForConnections:true,
-    connectionLimit:12,
+    connectionLimit:5,
+    connectTimeout:10000,
     charset:'utf8mb4',
     ...(ca?{ssl:{ca,rejectUnauthorized:true,verifyIdentity:true}}:{})
   };
