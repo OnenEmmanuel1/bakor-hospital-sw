@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= title %> · Bakor Hospital</title>
+  <link rel="stylesheet" href="/css/bkh.css">
+</head>
+<body class="bkh-app">
+  <div class="bkh-shell">
+    <aside class="bkh-sidebar" id="workspace-sidebar" aria-label="Main navigation">
+      <a class="bkh-logo" href="/" aria-label="Bakor Hospital home"><span class="bkh-logo-mark">B</span><span class="bkh-logo-copy"><strong>Bakor</strong><small>HOSPITAL</small></span></a>
+      <div class="bkh-nav-caption">WORKSPACE</div>
+      <nav class="bkh-nav"><% nav.forEach(link=>{ %><a class="bkh-nav-link <%= link[0]===requestPath?'bkh-nav-link-active':'' %>" href="<%= link[0] %>"><span class="bkh-nav-symbol" aria-hidden="true">›</span><span><%= link[1] %></span></a><% }) %></nav>
+      <div class="bkh-sidebar-bottom"><div class="bkh-sidebar-note"><span class="bkh-status-dot"></span><span>Role-restricted workspace</span></div></div>
+    </aside>
+    <div class="bkh-main-column">
+      <header class="bkh-topbar"><button class="bkh-menu-toggle" type="button" aria-controls="workspace-sidebar" aria-expanded="false" aria-label="Open navigation"><span></span><span></span><span></span></button><div class="bkh-breadcrumb"><span>Bakor Hospital</span><span class="bkh-breadcrumb-divider">/</span><strong><%= title %></strong></div><div class="bkh-account"><span class="bkh-avatar"><%= user.email.charAt(0).toUpperCase() %></span><span class="bkh-account-copy"><strong><%= user.email %></strong><small><%= user.role.replace('_',' ') %></small></span><form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrfToken() %>"><button class="bkh-signout" type="submit">Sign out</button></form></div></header>
+      <main class="bkh-content">
+        <div class="bkh-page-heading"><div><p class="bkh-eyebrow">YOUR WORKSPACE</p><h1><%= title %></h1><p class="bkh-lead"><%= intro %></p></div><span class="bkh-date-chip"><span class="bkh-status-dot"></span>Secure session</span></div>
+        <% if(notice){ %><p class="bkh-notice" role="status"><%= notice %></p><% } %>
+        <section class="bkh-summary-grid" aria-label="Workspace summary"><% stats.forEach(stat=>{ %><article class="bkh-summary-card"><span class="bkh-summary-label"><%= stat[0] %></span><strong class="bkh-summary-value"><%= stat[1] %></strong><span class="bkh-summary-hint">Current overview</span></article><% }) %></section>
+        <% if(shortcuts&&shortcuts.length){ %>
+        <section class="bkh-shortcuts" aria-labelledby="workspace-shortcuts-title">
+          <div class="bkh-shortcuts-heading"><div><p class="bkh-eyebrow">SYSTEM OVERVIEW</p><h2 id="workspace-shortcuts-title">Quick access</h2></div><span>Choose an area to manage</span></div>
+          <div class="bkh-shortcut-grid"><% shortcuts.forEach(item=>{ %><a class="bkh-shortcut-card" href="<%= item[0] %>"><span class="bkh-shortcut-number"><%= item[3] %></span><span class="bkh-shortcut-copy"><strong><%= item[1] %></strong><small><%= item[2] %></small></span><span class="bkh-shortcut-arrow" aria-hidden="true">&#8599;</span></a><% }) %></div>
+        </section>
+        <% } %>        <section class="bkh-work-forms" aria-label="Actions"><% forms.forEach((form,index)=>{ %><details class="bkh-work-card" <%= index===0?'open':'' %>><summary><span><%= form.title %></span><span aria-hidden="true">+</span></summary><form method="post" action="<%= form.action %>" class="bkh-work-form" <%= ['/patient/appointments','/reception/appointments'].includes(form.action)?'data-slot-booking="true"':'' %>><input type="hidden" name="_csrf" value="<%= csrfToken() %>"><% form.fields.forEach(f=>{ %><div class="bkh-field <%= f.type==='checkbox'?'bkh-field-check':'' %>"><% if(f.type==='checkbox'){ %><label class="bkh-check-label"><input type="checkbox" name="<%= f.name %>" value="<%= f.value||'yes' %>"><span><%= f.label %></span></label><% }else{ %><label for="<%= form.action.replace(/[^a-z0-9]/gi,'')+'_'+f.name %>"><%= f.label %></label><% if(f.type==='select'){ %><select id="<%= form.action.replace(/[^a-z0-9]/gi,'')+'_'+f.name %>" name="<%= f.name %>" <%= f.required?'required':'' %>><% if(!f.required||f.empty){ %><option value=""><%= f.empty||'Choose an option' %></option><% } %><% (f.options||[]).forEach(option=>{ %><option value="<%= option[0] %>"><%= option[1] %></option><% }) %></select><% }else if(f.type==='textarea'){ %><textarea id="<%= form.action.replace(/[^a-z0-9]/gi,'')+'_'+f.name %>" name="<%= f.name %>" rows="3" <%= f.required?'required':'' %>></textarea><% }else if(f.type==='time'&&['/patient/appointments','/reception/appointments'].includes(form.action)){ %><select id="<%= form.action.replace(/[^a-z0-9]/gi,'')+'_'+f.name %>" name="<%= f.name %>" required data-slot-time><option value="">Choose doctor and date first</option></select><% }else{ %><input id="<%= form.action.replace(/[^a-z0-9]/gi,'')+'_'+f.name %>" name="<%= f.name %>" type="<%= f.type %>" <%= f.required?'required':'' %> <%= f.type==='number'?'min="0" step="any"':'' %> <%= f.placeholder?'placeholder="'+f.placeholder+'"':'' %>><% } %><% } %></div><% }) %><button class="bkh-primary-button" type="submit"><%= form.submit %><span aria-hidden="true">→</span></button></form></details><% }) %></section>
+        <% tables.forEach((t,tableIndex)=>{ %><section class="bkh-panel bkh-work-table" aria-labelledby="work-table-<%= tableIndex %>"><div class="bkh-panel-heading"><div><p class="bkh-eyebrow">RECORDS</p><h2 id="work-table-<%= tableIndex %>"><%= t.title %></h2></div><span class="bkh-count"><%= t.rows.length %> shown</span></div><% if(!t.rows.length){ %><div class="bkh-empty-state"><span class="bkh-empty-mark">—</span><strong>No records yet</strong><p>Records will appear here as this workspace is used.</p></div><% }else{ %><div class="bkh-table-wrap"><table><thead><tr><% t.columns.forEach(col=>{ %><th scope="col"><%= col[0] %></th><% }) %></tr></thead><tbody><% t.rows.forEach(row=>{ %><tr><% t.columns.forEach(col=>{ %><td><% if(col[1]==='action'&&row.action&&typeof row.action==='object'){ %><form method="post" action="<%= row.action.url %>" class="bkh-inline-action"><input type="hidden" name="_csrf" value="<%= csrfToken() %>"><% (row.action.extra||[]).forEach(pair=>{ %><input type="hidden" name="<%= pair[0] %>" value="<%= pair[1] %>"><% }) %><button type="submit"><%= row.action.label %></button></form><% }else{ let value=row[col[1]]; if(value instanceof Date)value=value.toLocaleString(); %><%= value===undefined||value===null||value===''?'—':value %><% } %></td><% }) %></tr><% }) %></tbody></table></div><% } %></section><% }) %>
+        <footer class="bkh-footer"><span>Independent academic prototype · Fictional data</span><a href="/about">About this prototype</a></footer>
+      </main>
+    </div>
+  </div>
+  <script src="/js/workspaces.js" defer></script>
+</body>
+</html>

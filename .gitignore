@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+node_modules/
+npm-debug.log*
+coverage/
+.DS_Store
+uploads/*
+!uploads/.gitkeep
+secrets/
+*.pem
+*.key

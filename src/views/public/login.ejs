@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f8f3">
+  <title>Sign in | Bakor Hospital</title>
+  <link rel="stylesheet" href="/css/bkh.css">
+</head>
+<body class="bkh-auth-page">
+  <main class="bkh-auth-layout">
+    <section class="bkh-auth-intro" aria-labelledby="intro-heading">
+      <a class="bkh-auth-brand" href="/" aria-label="Bakor Hospital home">
+        <span class="bkh-auth-brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M14 4h4v8h8v4h-8v8h-4v-8H6v-4h8z"/><circle cx="24" cy="24" r="3"/></svg></span>
+        <span><strong>Bakor</strong><small>HOSPITAL</small></span>
+      </a>
+      <div class="bkh-auth-intro-copy">
+        <p class="bkh-auth-eyebrow"><span></span> CARE, CONNECTED</p>
+        <h1 id="intro-heading">Good health starts with <em>good care.</em></h1>
+        <p class="bkh-auth-description">A calmer way to stay connected with your care team and keep your hospital visits in view.</p>
+      </div>
+      <div class="bkh-auth-art" aria-hidden="true">
+        <div class="bkh-auth-orbit bkh-auth-orbit-one"></div>
+        <div class="bkh-auth-orbit bkh-auth-orbit-two"></div>
+        <div class="bkh-auth-art-glow"></div>
+        <div class="bkh-auth-cross">+</div>
+        <div class="bkh-auth-care-card">
+          <span class="bkh-auth-care-icon"><svg viewBox="0 0 48 48"><path d="M17 8h14a5 5 0 0 1 5 5v5M14 14h-2a5 5 0 0 0-5 5v16a5 5 0 0 0 5 5h13"/><circle cx="32" cy="31" r="11"/><path d="m27 31 3.5 3.5L37 28"/></svg></span>
+          <span><strong>Care, in one place</strong><small>Your Bakor patient workspace</small></span>
+          <span class="bkh-auth-care-dot"></span>
+        </div>
+        <div class="bkh-auth-leaf bkh-auth-leaf-one"></div>
+        <div class="bkh-auth-leaf bkh-auth-leaf-two"></div>
+      </div>
+      <p class="bkh-auth-legal">A welcoming place for your health journey.</p>
+    </section>
+
+    <section class="bkh-auth-panel" aria-labelledby="login-heading">
+      <div class="bkh-auth-panel-inner">
+        <div class="bkh-auth-mobile-brand" aria-hidden="true"><span class="bkh-auth-brand-mark"><svg viewBox="0 0 32 32"><path d="M14 4h4v8h8v4h-8v8h-4v-8H6v-4h8z"/></svg></span><span><strong>Bakor</strong><small>HOSPITAL</small></span></div>
+        <div class="bkh-auth-lock" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="8" y="21" width="32" height="23" rx="5"/><path d="M15 21v-8a9 9 0 0 1 17.5-3M19 32l4 4 8-9"/><circle cx="31" cy="31" r="10"/></svg></div>
+        <p class="bkh-auth-panel-kicker">YOUR HEALTH WORKSPACE</p>
+        <h2 id="login-heading">Welcome back</h2>
+        <p class="bkh-auth-panel-subtitle">Sign in to continue to your Bakor Hospital account.</p>
+        <% if(error){ %><p class="bkh-alert" role="alert"><%= error %></p><% } %>
+        <form class="bkh-login-form" method="post" action="/login">
+          <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+          <label for="email">Email address</label>
+          <input id="email" type="email" name="email" autocomplete="username" placeholder="you@example.com" required>
+          <div class="bkh-auth-password-label"><label for="password">Password</label><span>Use your account password</span></div>
+          <input id="password" type="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+          <button type="submit">Sign in <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="bkh-auth-divider"><span>SECURE ACCESS</span></div>
+        <p class="bkh-auth-register">Need an account? <span>Patient registration is handled by hospital staff.</span></p>
+        <a class="bkh-auth-about" href="/about">About Bakor Hospital <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="bkh-auth-panel-foot">Protected workspace <span aria-hidden="true">·</span> Fictional demonstration data</p>
+    </section>
+  </main>
+</body>
+</html>

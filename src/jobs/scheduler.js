@@ -1,0 +1,1 @@
+const cron=require('node-cron');const reminder=require('./reminders'),noShow=require('./noShow'),alerts=require('./stockAlerts');cron.schedule('0 * * * *',()=>reminder().catch(console.error));cron.schedule('59 23 * * *',()=>noShow().catch(console.error));cron.schedule('0 8 * * *',()=>alerts().catch(console.error));

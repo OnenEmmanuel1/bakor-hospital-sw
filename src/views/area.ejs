@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> · Bakor Hospital</title>
+  <link rel="stylesheet" href="/css/bkh.css">
+</head>
+<body class="bkh-app">
+  <div class="bkh-shell">
+    <aside class="bkh-sidebar" aria-label="Main navigation">
+      <a class="bkh-logo" href="/" aria-label="Bakor Hospital home">
+        <span class="bkh-logo-mark" aria-hidden="true">B</span>
+        <span class="bkh-logo-copy"><strong>Bakor</strong><small>HOSPITAL</small></span>
+      </a>
+      <div class="bkh-nav-caption">WORKSPACE</div>
+      <nav class="bkh-nav">
+        <a class="bkh-nav-link bkh-nav-link-active" href="/" aria-current="page"><span class="bkh-nav-symbol" aria-hidden="true">▦</span><span>Overview</span></a>
+      </nav>
+      <div class="bkh-sidebar-bottom">
+        <a class="bkh-nav-link" href="/about"><span class="bkh-nav-symbol" aria-hidden="true">ⓘ</span><span>About this prototype</span></a>
+        <div class="bkh-sidebar-note"><span class="bkh-status-dot" aria-hidden="true"></span><span>Prototype workspace</span></div>
+      </div>
+    </aside>
+
+    <div class="bkh-main-column">
+      <header class="bkh-topbar">
+        <div class="bkh-breadcrumb"><span>Bakor Hospital</span><span class="bkh-breadcrumb-divider">/</span><strong><%= title %></strong></div>
+        <div class="bkh-account">
+          <span class="bkh-avatar" aria-hidden="true"><%= user.email.charAt(0).toUpperCase() %></span>
+          <span class="bkh-account-copy"><strong><%= user.email %></strong><small><%= user.role.replace('_',' ') %></small></span>
+          <form method="post" action="/logout">
+            <input type="hidden" name="_csrf" value="<%= csrfToken() %>">
+            <button class="bkh-signout" type="submit">Sign out</button>
+          </form>
+        </div>
+      </header>
+
+      <main class="bkh-content">
+        <div class="bkh-page-heading">
+          <div>
+            <p class="bkh-eyebrow">YOUR WORKSPACE</p>
+            <h1><%= title %></h1>
+            <p class="bkh-lead">A clear view of the latest records for your role.</p>
+          </div>
+          <span class="bkh-date-chip"><span class="bkh-status-dot" aria-hidden="true"></span>Secure session</span>
+        </div>
+
+        <% if(typeof patient!=='undefined'&&patient){ %>
+          <section class="bkh-patient-banner" aria-label="Patient profile">
+            <span class="bkh-patient-initial" aria-hidden="true"><%= patient.first_name.charAt(0) %></span>
+            <div><small>YOUR HOSPITAL NUMBER</small><strong><%= patient.patient_no %></strong></div>
+            <div class="bkh-patient-name"><small>PATIENT</small><strong><%= patient.first_name %> <%= patient.last_name %></strong></div>
+          </section>
+        <% } %>
+
+        <section class="bkh-summary-grid" aria-label="Workspace summary">
+          <article class="bkh-summary-card">
+            <span class="bkh-summary-label">Records in this view</span>
+            <strong class="bkh-summary-value"><%= items.length %></strong>
+            <span class="bkh-summary-hint">Currently listed</span>
+          </article>
+          <article class="bkh-summary-card bkh-summary-card-tint">
+            <span class="bkh-summary-label">Workspace</span>
+            <strong class="bkh-summary-role"><%= user.role.replace('_',' ') %></strong>
+            <span class="bkh-summary-hint">Role-restricted access</span>
+          </article>
+        </section>
+
+        <section class="bkh-panel" aria-labelledby="bkh-records-heading">
+          <div class="bkh-panel-heading">
+            <div><p class="bkh-eyebrow">RECORDS</p><h2 id="bkh-records-heading"><%= title==='Doctor workspace'?'Upcoming queue':title==='Patient portal'?'Your appointments':title==='Registration desk'?'Recent patient records':title==='Laboratory'?'Laboratory requests':title==='Pharmacy'?'Drug catalog':title==='Billing desk'?'Recent invoices':'User accounts' %></h2></div>
+            <span class="bkh-count"><%= items.length %> shown</span>
+          </div>
+          <% if(!items.length){ %>
+            <div class="bkh-empty-state"><span class="bkh-empty-mark" aria-hidden="true">—</span><strong>No records to show</strong><p>When records are available for this view, they will appear here.</p></div>
+          <% } else { %>
+            <div class="bkh-table-wrap">
+              <table>
+                <thead><tr><% columns.forEach(c=>{ %><th scope="col"><%= c %></th><% }) %></tr></thead>
+                <tbody><% items.forEach(item=>{ %><tr><% fields.forEach(f=>{ %><td><%= item[f] instanceof Date?item[f].toLocaleDateString():item[f] %></td><% }) %></tr><% }) %></tbody>
+              </table>
+            </div>
+          <% } %>
+        </section>
+        <footer class="bkh-footer"><span>Independent academic prototype · Fictional data</span><a href="/about">About this prototype</a></footer>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

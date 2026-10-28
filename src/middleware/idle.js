@@ -1,0 +1,1 @@
+module.exports=(req,res,next)=>{if(req.session.user&&Date.now()-req.session.lastSeen>1800000)return req.session.destroy(()=>res.redirect('/login'));if(req.session.user)req.session.lastSeen=Date.now();next();};

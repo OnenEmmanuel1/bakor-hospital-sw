@@ -1,0 +1,1 @@
+module.exports=(req,res,next)=>{const {validationResult}=require('express-validator');const errors=validationResult(req);if(!errors.isEmpty())return res.status(400).render('public/error',{message:'Please check the information you entered.'});next();};
