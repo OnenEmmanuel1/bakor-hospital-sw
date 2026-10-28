@@ -222,6 +222,7 @@ tbody tr:hover { background: var(--bkh-row-hover); }
 .bkh-work-form { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 11px 13px; padding: 18px; }
 .bkh-field { min-width: 0; display: grid; align-content: start; gap: 5px; }
 .bkh-field > label, .bkh-check-label { color: #59665d; font-size: 10px; font-weight: 600; }
+.bkh-field-hint { color: #68756c; font-size: 10px; line-height: 1.45; }
 .bkh-field input:not([type=checkbox]), .bkh-field select, .bkh-field textarea { width: 100%; min-width: 0; min-height: 37px; padding: 8px 10px; color: var(--bkh-text); background: #fcfdfb; border: 1px solid var(--bkh-border-strong); border-radius: 7px; font: inherit; font-size: 11px; }
 .bkh-field textarea { min-height: 65px; resize: vertical; }
 .bkh-field input:focus, .bkh-field select:focus, .bkh-field textarea:focus { border-color: var(--bkh-primary); outline: 2px solid #5c8e3f25; }
